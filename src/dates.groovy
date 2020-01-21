@@ -3,16 +3,11 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.remote.DesiredCapabilities
-import org.openqa.selenium.remote.RemoteWebDriver
-
+import org.openqa.selenium.chrome.ChromeOptions
 
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
-
-System.setProperty('webdriver.chrome.driver', '../chromedriver')
 
 static Date convertToDate(String date) {
     new SimpleDateFormat("EEEE dd MMMM yyyy").parse(date)
@@ -28,19 +23,10 @@ class BinData {
 // Get a web browser and navigate to the first page
 ///////////////////////////////////////////////////////////////////
 
-//DesiredCapabilities capabilities = DesiredCapabilities.chrome()
-
-//def options = new ChromeOptions()
-//options.addArguments("disable-infobars")
-//capabilities.setCapability(ChromeOptions.CAPABILITY, options)
-
-//RemoteWebDriver driver = new RemoteWebDriver(capabilities)
-
 System.setProperty('webdriver.chrome.driver', '/usr/bin/chromedriver')
-ChromeOptions options = new ChromeOptions();
+final ChromeOptions options = new ChromeOptions();
 options.addArguments("--headless");
-WebDriver driver = new ChromeDriver(options);
-
+final WebDriver driver = new ChromeDriver(options);
 driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
 
 def dir = new File(String.format("%s/.wheelie", System.getProperty("user.home")))
