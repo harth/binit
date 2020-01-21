@@ -2,9 +2,12 @@
 @groovy.lang.Grab(group = 'com.fasterxml.jackson.core', module = 'jackson-databind', version = '2.10.1')
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
+
 
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
@@ -25,13 +28,18 @@ class BinData {
 // Get a web browser and navigate to the first page
 ///////////////////////////////////////////////////////////////////
 
-DesiredCapabilities capabilities = DesiredCapabilities.chrome()
+//DesiredCapabilities capabilities = DesiredCapabilities.chrome()
 
-def options = new ChromeOptions()
-options.addArguments("disable-infobars")
-capabilities.setCapability(ChromeOptions.CAPABILITY, options)
+//def options = new ChromeOptions()
+//options.addArguments("disable-infobars")
+//capabilities.setCapability(ChromeOptions.CAPABILITY, options)
 
-RemoteWebDriver driver = new RemoteWebDriver(capabilities)
+//RemoteWebDriver driver = new RemoteWebDriver(capabilities)
+
+System.setProperty('webdriver.chrome.driver', '/usr/bin/chromedriver')
+ChromeOptions options = new ChromeOptions();
+options.addArguments("--headless");
+WebDriver driver = new ChromeDriver(options);
 
 driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
 
