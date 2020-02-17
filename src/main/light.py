@@ -7,6 +7,8 @@ pins = [35, 37, 40]
 red = [0, 100, 100]
 blue = [100, 0, 100]
 green = [100, 100, 0]
+black = [0, 0, 0]
+
 
 def setup():
     global pwmRed, pwmGreen, pwmBlue
@@ -62,8 +64,12 @@ if __name__ == '__main__':  # Program entrance
                     if bins['colour'] == 'Brown':
                         set_colour(red)
                     elif bins['colour'] == 'Green':
-                        set_colour(blue)
+                        set_colour(green)
                     elif bins['colour'] == 'Blue':
+                        set_colour(blue)
+                    elif bins['colour'] == 'Grey':
+                        set_colour(blue)
+                    elif bins['colour'] == 'Glass':
                         set_colour(green)
 
     except IOError:
