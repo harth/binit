@@ -51,7 +51,7 @@ class RGBLed {
     }
 
     final void off() {
-        displayColor(Color.BLACK);
+        displayColor(Color.RED);
     }
 
     Color getDisplayedColor() {
