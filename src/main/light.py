@@ -4,7 +4,9 @@ import os
 import RPi.GPIO as GPIO
 
 pins = [35, 37, 40]
-
+red = [0, 100, 100]
+blue = [100, 0, 100]
+green = [100, 100, 0]
 
 def setup():
     global pwmRed, pwmGreen, pwmBlue
@@ -19,10 +21,11 @@ def setup():
     pwmBlue.start(0)
 
 
-def setColor(r_val, g_val, b_val):  # change duty cycle for three pins to r_val,g_val,b_val
-    pwmRed.ChangeDutyCycle(r_val)  # change pwmRed duty cycle to r_val
-    pwmGreen.ChangeDutyCycle(g_val)
-    pwmBlue.ChangeDutyCycle(b_val)
+def set_colour(rgb_val):  # change duty cycle for three pins to r_val,g_val,b_val
+    pwmRed.ChangeDutyCycle(rgb_val[0])  # change pwmRed duty cycle to r_val
+    pwmGreen.ChangeDutyCycle(rgb_val[1])
+    pwmBlue.ChangeDutyCycle(rgb_val[2])
+
 
 def destroy():
     pwmRed.stop()
@@ -46,7 +49,7 @@ if __name__ == '__main__':  # Program entrance
 
             # No schedule - red flashing lights
             if len(binsToBeCollected) == 0:
-                setColor(0, 100, 100)
+                set_colour(0, 100, 100)
 
             # One schedule date - one solid light, turn other one off
             if len(binsToBeCollected) == 1:
@@ -57,11 +60,11 @@ if __name__ == '__main__':  # Program entrance
                 for bins in binsToBeCollected:
                     print("Bin colour " + bins['colour'])
                     if bins['colour'] == 'Brown':
-                        setColor(0, 100, 100)
+                        set_colour(red)
                     elif bins['colour'] == 'Green':
-                        setColor(100, 0, 100)
+                        set_colour(blue)
                     elif bins['colour'] == 'Blue':
-                        setColor(100, 100, 0)
+                        set_colour(green)
 
     except IOError:
         print("File does not exist")
