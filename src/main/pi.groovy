@@ -5,7 +5,7 @@ import com.pi4j.io.gpio.*
 import java.awt.*
 import com.pi4j.wiringpi.SoftPwm;
 
-def led = new RGBLed(pinLayout: new PinLayout(redPin: RaspiPin.GPIO_11, bluePin: RaspiPin.GPIO_12, greenPin: RaspiPin.GPIO_13))
+def led = new RGBLed(new PinLayout(redPin: RaspiPin.GPIO_11, bluePin: RaspiPin.GPIO_12, greenPin: RaspiPin.GPIO_13))
 led.displayColor(Color.BLUE)
 
 
