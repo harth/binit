@@ -1,7 +1,30 @@
 import json
+import os
+import RPi.GPIO as GPIO
+import time
+import random
+
+pins = [35, 37, 40]
+
+def setup():
+    global pwmRed,pwmGreen,pwmBlue
+    GPIO.setmode(GPIO.BOARD)       # use PHYSICAL GPIO Numbering
+    GPIO.setup(pins, GPIO.OUT)     # set RGBLED pins to OUTPUT mode
+    GPIO.output(pins, GPIO.HIGH)   # make RGBLED pins output HIGH level
+    pwmRed = GPIO.PWM(pins[0], 2000)      # set PWM Frequence to 2kHz
+    pwmGreen = GPIO.PWM(pins[1], 2000)  # set PWM Frequence to 2kHz
+    pwmBlue = GPIO.PWM(pins[2], 2000)    # set PWM Frequence to 2kHz
+    pwmRed.start(0)      # set initial Duty Cycle to 0
+    pwmGreen.start(0)
+    pwmBlue.start(0)
+
+def setColor(r_val,g_val,b_val):      # change duty cycle for three pins to r_val,g_val,b_val
+    pwmRed.ChangeDutyCycle(r_val)     # change pwmRed duty cycle to r_val
+    pwmGreen.ChangeDutyCycle(g_val)
+    pwmBlue.ChangeDutyCycle(b_val)
 
 try:
-    with open('/Users/stuartwilson/.wheelie/schedule.json') as scheduleLocation:
+    with open(os.environ['HOME'] + '/.wheelie/schedule.json') as scheduleLocation:
         schedule = json.load(scheduleLocation)
         binsToBeCollected = []
 
@@ -11,7 +34,7 @@ try:
 
         # No schedule - red flashing lights
         if len(binsToBeCollected) == 0:
-            print "No bins to be collected"
+            setColor(0, 100, 100)
 
         # One schedule date - one solid light, turn other one off
         if len(binsToBeCollected) == 1:
@@ -19,7 +42,13 @@ try:
 
         # Two scheduled dates - two solid lights
         if len(binsToBeCollected) == 2:
-            print "Display two lights"
+            for bins in binsToBeCollected:
+                if bins['colour'] == 'Brown':
+                    setColor(0, 100, 100)
+                elif bins['colour'] == 'Green':
+                    setColor(100, 0, 100)
+                elif bins['colour'] == 'Blue':
+                    setColor(100, 100, 0)
 
         print binsToBeCollected
 except IOError:
