@@ -23,6 +23,10 @@ def setColor(r_val,g_val,b_val):      # change duty cycle for three pins to r_va
     pwmGreen.ChangeDutyCycle(g_val)
     pwmBlue.ChangeDutyCycle(b_val)
 
+if __name__ == '__main__':     # Program entrance
+    print ('Program is starting ... ')
+    setup()
+
 try:
     with open(os.environ['HOME'] + '/.wheelie/schedule.json') as scheduleLocation:
         schedule = json.load(scheduleLocation)
@@ -52,6 +56,9 @@ try:
 
 except IOError:
     print("File does not exist")
+    
+except KeyboardInterrupt:  # Press ctrl-c to end the program.
+        destroy()
 
 
 
