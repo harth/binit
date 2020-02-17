@@ -50,7 +50,6 @@ try:
                 elif bins['colour'] == 'Blue':
                     setColor(100, 100, 0)
 
-        print binsToBeCollected
 except IOError:
     print("File does not exist")
 
