@@ -5,8 +5,8 @@ import RPi.GPIO as GPIO
 
 pins = [35, 37, 40]
 red = [0, 100, 100]
-blue = [100, 0, 100]
-green = [100, 100, 0]
+green = [100, 0, 100]
+blue = [100, 100, 0]
 black = [0, 0, 0]
 
 
