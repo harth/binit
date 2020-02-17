@@ -38,7 +38,7 @@ try:
 
         # One schedule date - one solid light, turn other one off
         if len(binsToBeCollected) == 1:
-            print "Only display one light"
+            print("Only display one light")
 
         # Two scheduled dates - two solid lights
         if len(binsToBeCollected) == 2:
@@ -52,7 +52,7 @@ try:
 
         print binsToBeCollected
 except IOError:
-    print "File does not exist"
+    print("File does not exist")
 
 
 
