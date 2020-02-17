@@ -1,64 +1,69 @@
 import json
 import os
+
 import RPi.GPIO as GPIO
-import time
-import random
 
 pins = [35, 37, 40]
 
+
 def setup():
-    global pwmRed,pwmGreen,pwmBlue
-    GPIO.setmode(GPIO.BOARD)       # use PHYSICAL GPIO Numbering
-    GPIO.setup(pins, GPIO.OUT)     # set RGBLED pins to OUTPUT mode
-    GPIO.output(pins, GPIO.HIGH)   # make RGBLED pins output HIGH level
-    pwmRed = GPIO.PWM(pins[0], 2000)      # set PWM Frequence to 2kHz
+    global pwmRed, pwmGreen, pwmBlue
+    GPIO.setmode(GPIO.BOARD)  # use PHYSICAL GPIO Numbering
+    GPIO.setup(pins, GPIO.OUT)  # set RGBLED pins to OUTPUT mode
+    GPIO.output(pins, GPIO.HIGH)  # make RGBLED pins output HIGH level
+    pwmRed = GPIO.PWM(pins[0], 2000)  # set PWM Frequence to 2kHz
     pwmGreen = GPIO.PWM(pins[1], 2000)  # set PWM Frequence to 2kHz
-    pwmBlue = GPIO.PWM(pins[2], 2000)    # set PWM Frequence to 2kHz
-    pwmRed.start(0)      # set initial Duty Cycle to 0
+    pwmBlue = GPIO.PWM(pins[2], 2000)  # set PWM Frequence to 2kHz
+    pwmRed.start(0)  # set initial Duty Cycle to 0
     pwmGreen.start(0)
     pwmBlue.start(0)
 
-def setColor(r_val,g_val,b_val):      # change duty cycle for three pins to r_val,g_val,b_val
-    pwmRed.ChangeDutyCycle(r_val)     # change pwmRed duty cycle to r_val
+
+def setColor(r_val, g_val, b_val):  # change duty cycle for three pins to r_val,g_val,b_val
+    pwmRed.ChangeDutyCycle(r_val)  # change pwmRed duty cycle to r_val
     pwmGreen.ChangeDutyCycle(g_val)
     pwmBlue.ChangeDutyCycle(b_val)
 
-if __name__ == '__main__':     # Program entrance
+def destroy():
+    pwmRed.stop()
+    pwmGreen.stop()
+    pwmBlue.stop()
+    GPIO.cleanup()
+
+
+if __name__ == '__main__':  # Program entrance
     print ('Program is starting ... ')
     setup()
 
-try:
-    with open(os.environ['HOME'] + '/.wheelie/schedule.json') as scheduleLocation:
-        schedule = json.load(scheduleLocation)
-        binsToBeCollected = []
+    try:
+        with open(os.environ['HOME'] + '/.wheelie/schedule.json') as scheduleLocation:
+            schedule = json.load(scheduleLocation)
+            binsToBeCollected = []
 
-        for collection in schedule:
-            if collection["toBeCollected"]:
-                binsToBeCollected.append(collection)
+            for collection in schedule:
+                if collection["toBeCollected"]:
+                    binsToBeCollected.append(collection)
 
-        # No schedule - red flashing lights
-        if len(binsToBeCollected) == 0:
-            setColor(0, 100, 100)
+            # No schedule - red flashing lights
+            if len(binsToBeCollected) == 0:
+                setColor(0, 100, 100)
 
-        # One schedule date - one solid light, turn other one off
-        if len(binsToBeCollected) == 1:
-            print("Only display one light")
+            # One schedule date - one solid light, turn other one off
+            if len(binsToBeCollected) == 1:
+                print("Only display one light")
 
-        # Two scheduled dates - two solid lights
-        if len(binsToBeCollected) == 2:
-            for bins in binsToBeCollected:
-                if bins['colour'] == 'Brown':
-                    setColor(0, 100, 100)
-                elif bins['colour'] == 'Green':
-                    setColor(100, 0, 100)
-                elif bins['colour'] == 'Blue':
-                    setColor(100, 100, 0)
+            # Two scheduled dates - two solid lights
+            if len(binsToBeCollected) == 2:
+                for bins in binsToBeCollected:
+                    if bins['colour'] == 'Brown':
+                        setColor(0, 100, 100)
+                    elif bins['colour'] == 'Green':
+                        setColor(100, 0, 100)
+                    elif bins['colour'] == 'Blue':
+                        setColor(100, 100, 0)
 
-except IOError:
-    print("File does not exist")
-    
-except KeyboardInterrupt:  # Press ctrl-c to end the program.
+    except IOError:
+        print("File does not exist")
+
+    except KeyboardInterrupt:  # Press ctrl-c to end the program.
         destroy()
-
-
-
