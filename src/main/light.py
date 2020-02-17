@@ -55,6 +55,7 @@ if __name__ == '__main__':  # Program entrance
             # Two scheduled dates - two solid lights
             if len(binsToBeCollected) == 2:
                 for bins in binsToBeCollected:
+                    print("Bin colour " + bins['colour'])
                     if bins['colour'] == 'Brown':
                         setColor(0, 100, 100)
                     elif bins['colour'] == 'Green':
