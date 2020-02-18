@@ -1,6 +1,6 @@
 import json
 import os
-
+import time
 import RPi.GPIO as GPIO
 
 pins = [35, 37, 40]
@@ -36,44 +36,61 @@ def destroy():
     GPIO.cleanup()
 
 
-if __name__ == '__main__':  # Program entrance
-    print ('Program is starting ... ')
-    setup()
+def set_bin_colour(bins):
+    print("Bin colour " + bins['colour'])
+    if bins['colour'] == 'Brown':
+        set_colour(red)
+    elif bins['colour'] == 'Green':
+        set_colour(green)
+    elif bins['colour'] == 'Blue':
+        set_colour(blue)
+    elif bins['colour'] == 'Grey':
+        set_colour(blue)
+    elif bins['colour'] == 'Glass':
+        set_colour(green)
+
+
+def flash_red():
+    for i in range(1, 30):
+        set_colour(red)
+        time.sleep(1)
+        set_colour(black)
+
+
+def light_up():
 
     try:
         with open(os.environ['HOME'] + '/.wheelie/schedule.json') as scheduleLocation:
             schedule = json.load(scheduleLocation)
-            binsToBeCollected = []
+            bins_to_be_collected = []
 
-            for collection in schedule:
-                if collection["toBeCollected"]:
-                    binsToBeCollected.append(collection)
+            # for collection in schedule:
+            #     if collection["toBeCollected"]:
+            #         bins_to_be_collected.append(collection)
 
             # No schedule - red flashing lights
-            if len(binsToBeCollected) == 0:
-                set_colour(0, 100, 100)
+            if len(bins_to_be_collected) == 0:
+                flash_red()
 
             # One schedule date - one solid light, turn other one off
-            if len(binsToBeCollected) == 1:
-                print("Only display one light")
+            if len(bins_to_be_collected) == 1:
+                for bins in bins_to_be_collected:
+                    set_bin_colour(bins)
 
             # Two scheduled dates - two solid lights
-            if len(binsToBeCollected) == 2:
-                for bins in binsToBeCollected:
-                    print("Bin colour " + bins['colour'])
-                    if bins['colour'] == 'Brown':
-                        set_colour(red)
-                    elif bins['colour'] == 'Green':
-                        set_colour(green)
-                    elif bins['colour'] == 'Blue':
-                        set_colour(blue)
-                    elif bins['colour'] == 'Grey':
-                        set_colour(blue)
-                    elif bins['colour'] == 'Glass':
-                        set_colour(green)
+            if len(bins_to_be_collected) == 2:
+                for bins in bins_to_be_collected:
+                    set_bin_colour(bins)
 
     except IOError:
         print("File does not exist")
 
+
+if __name__ == '__main__':  # Program entrance
+    print ('Program is starting ... ')
+    setup()
+    try:
+        while True:
+            light_up()
     except KeyboardInterrupt:  # Press ctrl-c to end the program.
         destroy()
