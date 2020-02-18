@@ -90,6 +90,11 @@ def light_up():
 
     except IOError:
         print("File does not exist")
+        flash_red()
+
+    except ValueError:
+        print("Could not read schedule")
+        flash_red()
 
 
 if __name__ == '__main__':  # Program entrance
