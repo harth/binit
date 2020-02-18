@@ -65,22 +65,25 @@ def light_up():
             schedule = json.load(scheduleLocation)
             bins_to_be_collected = []
 
-            # for collection in schedule:
-            #     if collection["toBeCollected"]:
-            #         bins_to_be_collected.append(collection)
+            for collection in schedule:
+                if collection["toBeCollected"]:
+                    bins_to_be_collected.append(collection)
 
             # No schedule - red flashing lights
             if len(bins_to_be_collected) == 0:
+                print("No scheduled bins found")
                 flash_red()
 
             # One schedule date - one solid light, turn other one off
             if len(bins_to_be_collected) == 1:
+                print("One scheduled bins found")
                 for bins in bins_to_be_collected:
                     set_bin_colour(bins)
                     time.sleep(60)
 
             # Two scheduled dates - two solid lights
             if len(bins_to_be_collected) == 2:
+                print("Two scheduled bins found")
                 for bins in bins_to_be_collected:
                     set_bin_colour(bins)
                     time.sleep(60)
