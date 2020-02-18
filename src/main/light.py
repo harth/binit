@@ -98,6 +98,5 @@ if __name__ == '__main__':  # Program entrance
     try:
         while True:
             light_up()
-            time.sleep()
     except KeyboardInterrupt:  # Press ctrl-c to end the program.
         destroy()
