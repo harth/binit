@@ -55,6 +55,7 @@ def flash_red():
         set_colour(red)
         time.sleep(1)
         set_colour(black)
+        time.sleep(1)
 
 
 def light_up():
@@ -76,11 +77,13 @@ def light_up():
             if len(bins_to_be_collected) == 1:
                 for bins in bins_to_be_collected:
                     set_bin_colour(bins)
+                    time.sleep(60)
 
             # Two scheduled dates - two solid lights
             if len(bins_to_be_collected) == 2:
                 for bins in bins_to_be_collected:
                     set_bin_colour(bins)
+                    time.sleep(60)
 
     except IOError:
         print("File does not exist")
@@ -92,5 +95,6 @@ if __name__ == '__main__':  # Program entrance
     try:
         while True:
             light_up()
+            time.sleep()
     except KeyboardInterrupt:  # Press ctrl-c to end the program.
         destroy()
