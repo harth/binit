@@ -3,9 +3,7 @@ import os
 import time
 import RPi.GPIO as GPIO
 
-
-pins = [22, 32, 38, 40]
-
+pins = [22, 32, 38, 37]
 
 def setup():
     GPIO.setmode(GPIO.BOARD)  # use PHYSICAL GPIO Numbering
@@ -27,15 +25,25 @@ def set_bin_colour(bins):
         GPIO.output(pins[2], GPIO.HIGH)
     elif bins['colour'] == 'Grey':
         GPIO.output(pins[3], GPIO.HIGH)
+    elif bins['colour'] == 'Glass':
+        flash_green()      
 
+def flash_green():
+    for i in range(1, 30):
+        for p in range(0, 3):
+            GPIO.output(pins[3], GPIO.HIGH)
+        time.sleep(1)
+        for p in range(0, 3):
+            GPIO.output(pins[3], GPIO.LOW)
+        time.sleep(1)   
 
 def flash_all():
     for i in range(1, 30):
         for p in range(0, 3):
-            GPIO.output(pins[p], GPIO.HIGH)
+            GPIO.output(pins, GPIO.HIGH)
         time.sleep(1)
         for p in range(0, 3):
-            GPIO.output(pins[p], GPIO.LOW)
+            GPIO.output(pins, GPIO.LOW)
         time.sleep(1)
 
 
