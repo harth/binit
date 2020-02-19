@@ -2,37 +2,40 @@ import json
 import os
 import time
 import RPi.GPIO as GPIO
-from squid import *
 
-rgb_first = Squid(4, 17, 21)
-rgb_second = Squid(18, 23, 24)
+
+pins = [22, 32, 38, 40]
+
+
+def setup():
+    GPIO.setmode(GPIO.BOARD)  # use PHYSICAL GPIO Numbering
+    GPIO.setup(pins, GPIO.OUT)  # set RGBLED pins to OUTPUT mode
+    GPIO.output(pins, GPIO.LOW)  # make RGBLED pins output HIGH level
 
 
 def destroy():
     GPIO.cleanup()
 
 
-def set_bin_colour(bin, bins):
+def set_bin_colour(bins):
     print("Bin colour " + bins['colour'])
     if bins['colour'] == 'Brown':
-        bin.set_color(PURPLE, 100)
+        GPIO.output(pins[0], GPIO.HIGH)
     elif bins['colour'] == 'Green':
-        bin.set_color(GREEN)
+        GPIO.output(pins[1], GPIO.HIGH)
     elif bins['colour'] == 'Blue':
-        bin.set_color(BLUE)
+        GPIO.output(pins[2], GPIO.HIGH)
     elif bins['colour'] == 'Grey':
-        bin.set_color(CYAN)
-    elif bins['colour'] == 'Glass':
-        bin.set_color(YELLOW)
+        GPIO.output(pins[3], GPIO.HIGH)
 
 
-def flash_red():
+def flash_all():
     for i in range(1, 30):
-        rgb_first.set_color(RED)
-        rgb_second.set_color(RED)
+        for p in range(0, 3):
+            GPIO.output(pins[p], GPIO.HIGH)
         time.sleep(1)
-        rgb_first.set_color([0, 0, 0])
-        rgb_second.set_color([0, 0, 0])
+        for p in range(0, 3):
+            GPIO.output(pins[p], GPIO.LOW)
         time.sleep(1)
 
 
@@ -47,36 +50,39 @@ def light_up():
                 if collection["toBeCollected"]:
                     bins_to_be_collected.append(collection)
 
+            GPIO.output(pins, GPIO.LOW)
+
             # No schedule - red flashing lights
             if len(bins_to_be_collected) == 0:
                 print("No scheduled bins found")
-                flash_red()
+                flash_all()
 
             # One schedule date - one solid light, turn other one off
             if len(bins_to_be_collected) == 1:
                 print("One scheduled bins found")
-                set_bin_colour(rgb_first, bins_to_be_collected[0])
-                rgb_second.set_color(BLACK)
+                for bins in bins_to_be_collected:
+                    set_bin_colour(bins)
                 time.sleep(60)
 
             # Two scheduled dates - two solid lights
             if len(bins_to_be_collected) == 2:
                 print("Two scheduled bins found")
-                set_bin_colour(rgb_first, bins_to_be_collected[0])
-                set_bin_colour(rgb_second, bins_to_be_collected[1])
+                for bins in bins_to_be_collected:
+                    set_bin_colour(bins)
                 time.sleep(60)
 
     except IOError:
         print("File does not exist")
-        flash_red()
+        flash_all()
 
     except ValueError:
         print("Could not read schedule")
-        flash_red()
+        flash_all()
 
 
 if __name__ == '__main__':  # Program entrance
     print ('Program is starting ... ')
+    setup()
     try:
         while True:
             light_up()
