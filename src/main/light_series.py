@@ -48,7 +48,7 @@ def light_up():
                 if collection["toBeCollected"]:
                     bins_to_be_collected.append(collection)
 
-            GPIO.output(pins, GPIO.LOW)
+            GPIO.output(list(pins.values()), GPIO.LOW)
 
             # No schedule - red flashing lights
             if len(bins_to_be_collected) == 0:
