@@ -3,12 +3,19 @@ import os
 import time
 import RPi.GPIO as GPIO
 
-pins = [22, 32, 38, 37]
+pins = {
+    "Brown": 22,
+    "Green": 32,
+    "Blue": 38,
+    "Grey": 35,
+    "Glass": 37,
+}
+
 
 def setup():
     GPIO.setmode(GPIO.BOARD)  # use PHYSICAL GPIO Numbering
-    GPIO.setup(pins, GPIO.OUT)  # set RGBLED pins to OUTPUT mode
-    GPIO.output(pins, GPIO.LOW)  # make RGBLED pins output HIGH level
+    GPIO.setup(pins.values(), GPIO.OUT)  # set RGBLED pins to OUTPUT mode
+    GPIO.output(pins.values(), GPIO.LOW)  # make RGBLED pins output HIGH level
 
 
 def destroy():
@@ -17,25 +24,8 @@ def destroy():
 
 def set_bin_colour(bins):
     print("Bin colour " + bins['colour'])
-    if bins['colour'] == 'Brown':
-        GPIO.output(pins[0], GPIO.HIGH)
-    elif bins['colour'] == 'Green':
-        GPIO.output(pins[1], GPIO.HIGH)
-    elif bins['colour'] == 'Blue':
-        GPIO.output(pins[2], GPIO.HIGH)
-    elif bins['colour'] == 'Grey':
-        GPIO.output(pins[3], GPIO.HIGH)
-    elif bins['colour'] == 'Glass':
-        flash_green()      
+    GPIO.output(pins[bins['colour']], GPIO.HIGH)
 
-def flash_green():
-    for i in range(1, 30):
-        for p in range(0, 3):
-            GPIO.output(pins[3], GPIO.HIGH)
-        time.sleep(1)
-        for p in range(0, 3):
-            GPIO.output(pins[3], GPIO.LOW)
-        time.sleep(1)   
 
 def flash_all():
     for i in range(1, 30):
