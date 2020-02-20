@@ -13,9 +13,9 @@ pins = {
 
 
 def setup():
-    GPIO.setmode(GPIO.BOARD)  # use PHYSICAL GPIO Numbering
-    GPIO.setup(pins.values(), GPIO.OUT)  # set RGBLED pins to OUTPUT mode
-    GPIO.output(pins.values(), GPIO.LOW)  # make RGBLED pins output HIGH level
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(list(pins.values()), GPIO.OUT)
+    GPIO.output(list(pins.values()), GPIO.LOW)
 
 
 def destroy():
@@ -30,10 +30,10 @@ def set_bin_colour(bins):
 def flash_all():
     for i in range(1, 30):
         for p in range(0, 3):
-            GPIO.output(pins, GPIO.HIGH)
+            GPIO.output(list(pins.values()), GPIO.HIGH)
         time.sleep(1)
         for p in range(0, 3):
-            GPIO.output(pins, GPIO.LOW)
+            GPIO.output(list(pins.values()), GPIO.LOW)
         time.sleep(1)
 
 
